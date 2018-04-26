@@ -25,8 +25,9 @@ class ConsumerThread implements Runnable {
         try {
             while (!Thread.interrupted()) {
                 ConsumerRecords<String, String> records = consumer.poll(100);
-                if (records.count() > 0)
+                if (records.count() > 0) {
                 	LOG.info("Got records count: " + String.valueOf(records.count()));
+                }
                 for (ConsumerRecord<String, String> record : records) {
                     String topic = record.topic();
                     if(props.get(PropertyConfig.Constants.KAKFA_CONSUMER_REMOVEPREFIX.key,null) != null) {

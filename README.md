@@ -5,7 +5,18 @@ Consume Kafka topics and export to Prometheus
 ### Start process
 
 ```
-java -jar kafka-topic-exporter-0.0.5-jar-with-dependencies.jar config/kafka-topic-exporter.properties
+mvn clean package
+cd target
+echo "Create log4j.properties and kafka-topic-exporter.properties and put it in target folder"
+java -jar kafka-topic-exporter-0.0.5-jar-with-dependencies.jar -Dlog4j.configuration=file:log4j.properties kafka-topic-exporter.properties
+```
+
+### Run as Docker
+
+The below command are based on the assumption that the properties file is preset under "/usr/local/src/kafka-topic-exporter/kafka-topic-exporter.properties"
+```
+docker pull dmathai/prom-kafka-topic-exporter:latest
+docker run -d -v /var/log/:/var/log/ -v /usr/local/src/kafka-topic-exporter/:/usr/local/src/kafka-topic-exporter/ -p 9211:9211 -e PATH_PROPERTY_FILE=/usr/local/src/kafka-topic-exporter/kafka-topic-exporter.properties dmathai/prom-kafka-topic-exporter:latest
 ```
 
 ### Configuration

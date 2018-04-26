@@ -99,11 +99,13 @@ public class PropertyConfig {
             input = new FileInputStream(propFilePath);
             if (input != null) {
                 props.load(input);
-            } else {
-                throw new FileNotFoundException(propFilePath + "' not found");
             }
         } finally {
-            input.close();
+        	if (input == null) {
+        		throw new FileNotFoundException(propFilePath + "' not found");
+        	}else{
+        		input.close();
+        	}
         }
 
         return props;

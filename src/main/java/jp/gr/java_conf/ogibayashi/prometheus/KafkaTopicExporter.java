@@ -1,22 +1,18 @@
 package jp.gr.java_conf.ogibayashi.prometheus;
 
-import io.prometheus.client.Counter;
-import io.prometheus.client.Summary;
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
-import io.prometheus.client.exporter.MetricsServlet;
-import io.prometheus.client.hotspot.StandardExports;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.Future;
-import java.io.FileInputStream;
-import java.util.Properties;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
-import java.io.IOException;
+import org.slf4j.LoggerFactory;
+
+import io.prometheus.client.exporter.MetricsServlet;
 
 public class KafkaTopicExporter {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaTopicExporter.class);

@@ -1,31 +1,27 @@
 package jp.gr.java_conf.ogibayashi.prometheus;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.prometheus.client.Collector;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import java.util.Collections;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeSet;
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.prometheus.client.Collector;
 
 public class KafkaCollector extends Collector {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaCollector.class);
 
     private ObjectMapper mapper = new ObjectMapper();
-    private List<MetricFamilySamples> mfsList = new ArrayList<MetricFamilySamples>();
     private Map<String, Map<KafkaExporterLogEntry, LocalDateTime>> metricEntries = new ConcurrentHashMap<String, Map<KafkaExporterLogEntry, LocalDateTime>>();
-    private PropertyConfig pc;
     private long expire;
     
     public KafkaCollector(PropertyConfig pc) {
-        this.pc = pc;
         expire = pc.getMetricExpire();
     }
 
@@ -37,7 +33,7 @@ public class KafkaCollector extends Collector {
         LOG.debug("add: {}, {}", topic, recordValue);
         try {          
             KafkaExporterLogEntry record = mapper.readValue(recordValue, KafkaExporterLogEntry.class);
-            String metricName = topic.replaceAll("\\.","_") + "_" + record.getName().replaceAll("\\.","_");
+            String metricName = topic.replaceAll("[^A-Za-z0-9]","_") + "_" + record.getName().replaceAll("[^A-Za-z0-9]","_");
             if (metricName.startsWith("_")) {
               metricName = metricName.substring(1);
             }
@@ -90,7 +86,7 @@ public class KafkaCollector extends Collector {
         ArrayList<String> labelValues = new ArrayList<String>();
         if (logEntry.getLabels() != null) {
             for(Map.Entry<String, String> entry: logEntry.getLabels().entrySet()){
-                labelNames.add(entry.getKey());
+                labelNames.add(entry.getKey().replaceAll("[^A-Za-z0-9]","_"));
                 labelValues.add(entry.getValue());
             }
         }
