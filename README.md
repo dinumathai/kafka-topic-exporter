@@ -8,7 +8,7 @@ Consume Kafka topics and export to Prometheus
 mvn clean package
 cd target
 echo "Create log4j.properties and kafka-topic-exporter.properties and put it in target folder"
-java -jar kafka-topic-exporter-0.0.5-jar-with-dependencies.jar -Dlog4j.configuration=file:log4j.properties kafka-topic-exporter.properties
+java -jar -Dlog4j.configuration=file:log4j.properties kafka-topic-exporter-0.0.5-jar-with-dependencies.jar kafka-topic-exporter.properties
 ```
 
 ### Run as Docker
